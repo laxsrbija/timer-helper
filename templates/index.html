@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Timer Helper</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+	<script>
+		function calculateRunTime() {
+			const runTime = document.getElementById('runtime').value;
+			fetch('/calculate?runtime=' + runTime)
+				.then(response => response.json())
+				.then(json => {
+					document.getElementById('startTime').innerHTML = json.startTime;
+					document.getElementById('timeToStart').innerHTML = json.timeToStart;
+					document.getElementById("result").classList.remove('is-hidden');
+				});
+		}
+	</script>
+</head>
+<body>
+<section class="section">
+	<div class="container">
+		<h1 class="title">Timer Helper</h1>
+		<p class="subtitle">Assuming the finish time at <strong>5:25</strong></p>
+	</div>
+	<div class="container mt-6">
+		<h3 class="is-size-4">Enter the program run time:</h3>
+		<div class="control has-icons-left">
+			<input id="runtime" class="input is-large" type="text" placeholder="Run time (e.g. '2:54')">
+			<span class="icon is-medium is-left">
+				<ion-icon name="stopwatch-outline"></ion-icon>
+			</span>
+		</div>
+		<button class="button is-link mt-2 is-fullwidth" onclick="calculateRunTime()">Calculate</button>
+	</div>
+	<div id="result" class="container mt-5 is-hidden">
+		<div class="notification is-link">
+			<p>The program should start at: <strong id="startTime">2022-03-15 02:23</strong>
+			<p>Time until start: <strong id="timeToStart">13:37</strong>
+		</div>
+	</div>
+</section>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
