@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/calculate")
 def get_start_time():
-    now = datetime.datetime.now()
+    now = datetime.datetime.fromisoformat(request.args.get('localtime'))
 
     finish_time_hour = 5
     finish_time_minute = 25

@@ -6,9 +6,20 @@
 	<title>Timer Helper</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
 	<script>
+		function getCurrentDate() {
+			const now = new Date();
+			const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(now);
+			const month = new Intl.DateTimeFormat('sr-rs', { month: '2-digit' }).format(now);
+			const day = new Intl.DateTimeFormat('sr-rs', { day: '2-digit' }).format(now);
+			const hour = new Intl.DateTimeFormat('sr-rs', { hour: '2-digit' }).format(now);
+			const minute = new Intl.DateTimeFormat('sr-rs', { minute: '2-digit' }).format(now);
+			const second = new Intl.DateTimeFormat('sr-rs', { second: '2-digit' }).format(now);
+			return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+		}
+
 		function calculateRunTime() {
 			const runTime = document.getElementById('runtime').value;
-			fetch('/calculate?runtime=' + runTime)
+			fetch('/calculate?runtime=' + runTime + '&localtime=' + getCurrentDate())
 				.then(response => response.json())
 				.then(json => {
 					document.getElementById('startTime').innerHTML = json.startTime;
