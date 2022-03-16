@@ -1,4 +1,4 @@
-FROM mielune/alpine-python3-arm:latest
+FROM balenalib/raspberry-pi-python:3.8-run
 
 WORKDIR /usr/src/app
 COPY . .
