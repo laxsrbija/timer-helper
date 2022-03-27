@@ -5,25 +5,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Timer Helper</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-	<script>
-		function calculateRunTime() {
-			const runTime = document.getElementById('runtime').value;
-			const localDate = moment().format('YYYY-MM-DDTHH:mm:ss');
-			fetch('/calculate?runtime=' + runTime + '&localtime=' + localDate)
-				.then(response => response.json())
-				.then(json => {
-					document.getElementById('startTime').innerHTML = json.startTime;
-					document.getElementById('timeToStart').innerHTML = json.timeToStart;
-					document.getElementById("result").classList.remove('is-hidden');
-				});
-		}
-	</script>
 </head>
 <body>
 <section class="section">
 	<div class="container">
 		<h1 class="title">Timer Helper</h1>
-		<p class="subtitle">Assuming the finish time at <strong>5:25</strong></p>
+		<p class="subtitle">Assuming the finish time at <strong><span id="hour">5</span>:25</strong></p>
 	</div>
 	<div class="container mt-6">
 		<h3 class="is-size-4">Enter the program run time:</h3>
@@ -45,5 +32,24 @@
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+	function calculateRunTime() {
+		const runTime = document.getElementById('runtime').value;
+		const localDate = moment().format('YYYY-MM-DDTHH:mm:ss');
+		const isDst = moment().isDST();
+		fetch('/calculate?runtime=' + runTime + '&localtime=' + localDate + '&dst=' + isDst)
+			.then(response => response.json())
+			.then(json => {
+				document.getElementById('startTime').innerHTML = json.startTime;
+				document.getElementById('timeToStart').innerHTML = json.timeToStart;
+				document.getElementById("result").classList.remove('is-hidden');
+			});
+	}
+
+	if (moment().isDST())
+	{
+		document.getElementById("hour").innerHTML = "6";
+	}
+</script>
 </body>
 </html>
