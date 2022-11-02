@@ -9,8 +9,8 @@ def get_start_time():
     now = datetime.datetime.fromisoformat(request.args.get('localtime'))
     dst = request.args.get('dst')
 
-    finish_time_hour = 5 + (1 if dst else 0)
-    finish_time_minute = 25
+    finish_time_hour = 5 + (0 if dst else 1)
+    finish_time_minute = 15
 
     finish_time = (now + datetime.timedelta(days=1) if now.hour > 6 else now)\
         .replace(hour=finish_time_hour, minute=finish_time_minute, second=0)
