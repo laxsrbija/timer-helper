@@ -1,9 +1,14 @@
-FROM python:3.8-alpine
+FROM ghcr.io/graalvm/graalvm-ce:22 as build
 
-WORKDIR /usr/src/app
+WORKDIR /tmp
 COPY . .
 
-RUN pip install flask
+RUN ./mvnw -B -Pnative package native:compile-no-fork
 
-EXPOSE 5000
-CMD ["flask", "run", "--host=0.0.0.0"]
+FROM oraclelinux:9-slim
+
+WORKDIR /opt/timer-helper
+COPY --from=build /tmp/target/timer-helper .
+
+EXPOSE 8080
+CMD ["./timer-helper"]

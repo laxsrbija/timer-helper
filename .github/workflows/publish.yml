@@ -1,10 +1,7 @@
 
 name: Build and push Docker image
 
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
   build:
@@ -16,8 +13,8 @@ jobs:
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
         with:
-          name: laxsrbija/wmth
+          name: laxsrbija/timer-helper
           username: laxsrbija
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           tags: "latest"
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
