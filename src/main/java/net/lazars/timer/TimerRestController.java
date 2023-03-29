@@ -26,17 +26,19 @@ public class TimerRestController {
   @Value("${target-base-time}")
   private String targetBaseTime;
 
+  @Value("${time-zone}")
+  private String timeZone;
+
   @GetMapping("target")
-  public String getTargetBaseTime(final TimeZone timeZone) {
-    return getTargetTime(timeZone).format(TIME_FORMAT);
+  public String getTargetBaseTime() {
+    return getTargetTime().format(TIME_FORMAT);
   }
 
   @GetMapping("calculate")
   public CalculationResponse calculateFinishTime(
       @RequestParam("runtime") @DateTimeFormat(pattern = TIME_FORMAT_PATTERN)
-          final LocalTime runtime,
-      final TimeZone timeZone) {
-    final LocalTime targetTime = getTargetTime(timeZone);
+          final LocalTime runtime) {
+    final LocalTime targetTime = getTargetTime();
     final LocalDateTime finishTime =
         LocalDateTime.of(
             targetTime.getHour() > 6 ? LocalDate.now().plusDays(1) : LocalDate.now(), targetTime);
@@ -48,8 +50,8 @@ public class TimerRestController {
         startTime.format(DATE_TIME_FORMAT), finishTime.format(TIME_FORMAT));
   }
 
-  private LocalTime getTargetTime(final TimeZone timeZone) {
-    final boolean isDst = timeZone.inDaylightTime(new Date());
+  private LocalTime getTargetTime() {
+    final boolean isDst = TimeZone.getTimeZone(timeZone).inDaylightTime(new Date());
     return LocalTime.parse(targetBaseTime).plusHours(isDst ? 1 : 0);
   }
 
