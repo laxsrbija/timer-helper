@@ -2,6 +2,8 @@ package net.lazars.timer;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.TimeZone;
@@ -37,7 +39,7 @@ public class TimerRestController {
   public CalculationResponse calculateFinishTime(
       @RequestParam("runtime") @DateTimeFormat(pattern = TIME_FORMAT_PATTERN)
           final LocalTime runtime) {
-    final LocalDateTime now = LocalDateTime.now();
+    final ZonedDateTime now = ZonedDateTime.now(ZoneId.of(timeZone));
     final LocalDateTime finishTime =
         LocalDateTime.of(
             now.getHour() > 6 ? now.plusDays(1).toLocalDate() : now.toLocalDate(), getTargetTime());
