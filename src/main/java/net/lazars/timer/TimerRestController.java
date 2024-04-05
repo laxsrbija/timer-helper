@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class TimerRestController {
 
-  private static final String TIME_FORMAT_PATTERN = "H:mm";
+  private static final String TIME_FORMAT_PATTERN = "H.mm";
   private static final DateTimeFormatter TIME_FORMAT =
       DateTimeFormatter.ofPattern(TIME_FORMAT_PATTERN);
   private static final DateTimeFormatter DATE_TIME_FORMAT =
