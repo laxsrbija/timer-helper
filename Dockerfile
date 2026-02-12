@@ -5,7 +5,7 @@ COPY . .
 
 RUN ./mvnw -B -Pnative package native:compile-no-fork
 
-FROM oraclelinux:9-slim
+FROM oraclelinux:10-slim
 
 WORKDIR /opt/timer-helper
 COPY --from=build /tmp/target/timer-helper .
