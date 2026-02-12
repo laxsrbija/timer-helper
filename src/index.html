@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Timer Helper</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#6C66E2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <h1 class="title">Timer Helper</h1>
+        <p class="subtitle">Assuming the finish time at <strong id="targetTime">06.55</strong></p>
+    </div>
+
+    <div class="container mt-6">
+        <h3 class="is-size-4">Enter the program run time:</h3>
+        <form id="calcForm">
+            <div class="control has-icons-left">
+                <input id="runtime" class="input is-large" type="text" inputmode="decimal"
+                       placeholder="Run time (e.g. '2.54')" autofocus>
+                <span class="icon is-medium is-left">
+                <ion-icon name="stopwatch-outline"></ion-icon>
+             </span>
+            </div>
+            <button type="submit" class="button is-link mt-2 is-fullwidth">Calculate</button>
+        </form>
+    </div>
+
+    <div id="result" class="container mt-5 is-hidden">
+        <div class="notification is-link">
+            <p>The program should start at: <strong id="startTime">...</strong></p>
+            <p>Time until start: <strong id="timeToStart">...</strong></p>
+        </div>
+    </div>
+</section>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js');
+        });
+    }
+
+    const TARGET_TIME = "06:55";
+
+    const pad = (num) => String(num).padStart(2, '0');
+
+    function calculateRunTime(event) {
+        event.preventDefault();
+
+        const runtimeInput = document.getElementById('runtime').value; // Expecting "H.mm"
+        const parts = runtimeInput.split(/\D/);
+
+        if (parts.length !== 2) {
+            alert("Please enter hours and minutes (e.g., 2.30 or 2,30)");
+            return;
+        }
+
+        const runHours = parseInt(parts[0], 10);
+        const runMinutes = parseInt(parts[1], 10);
+        const [targetHours, targetMinutes] = TARGET_TIME.split(':').map(Number);
+
+        const now = new Date();
+
+        let finishDate = new Date(now);
+        if (now.getHours() > 6) {
+            finishDate.setDate(now.getDate() + 1);
+        }
+        finishDate.setHours(targetHours, targetMinutes, 0, 0);
+
+        const startDate = new Date(finishDate);
+        startDate.setHours(startDate.getHours() - runHours);
+        startDate.setMinutes(startDate.getMinutes() - runMinutes);
+
+        const diffMs = startDate - now;
+        const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+        const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+        const formattedStartTime = `${pad(startDate.getHours())}:${pad(startDate.getMinutes())} ${pad(startDate.getDate())}-${pad(startDate.getMonth() + 1)}-${startDate.getFullYear()}`;
+        const formattedTimeToStart = `${diffHrs}.${pad(diffMins)}`;
+
+        document.getElementById('startTime').innerText = formattedStartTime;
+        document.getElementById('timeToStart').innerText = formattedTimeToStart;
+        document.getElementById("result").classList.remove('is-hidden');
+    }
+
+    document.getElementById('calcForm').addEventListener('submit', calculateRunTime);
+</script>
+</body>
+</html>

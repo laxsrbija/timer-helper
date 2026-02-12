@@ -1,0 +1,14 @@
+{
+  "name": "Timer Helper",
+  "short_name": "Timer Helper",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6C66E2",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png"
+    }
+  ]
+}
